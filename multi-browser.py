@@ -24,11 +24,11 @@ class BurpExtender(IBurpExtender,IProxyListener, IContextMenuFactory,ActionListe
 		# Keep Track of Browsers
 		self._browser={}
 		# Colors for different browsers
-		self.colors=["red", "pink", "green","magenta","cyan", "gray", "yellow"]
+		self.colors=["red", "blue", "green","cyan", "yellow", "orange", "pink", "white"]
  
 		
 		self._callbacks.setExtensionName("Multi-Browser Highlighting")
-		self.isEnabled=False
+		self.isEnabled=True
 		
 		#IExtensionHelpers helpers = callbacks.getHelpers()
 		callbacks.registerProxyListener(self)
@@ -47,9 +47,13 @@ class BurpExtender(IBurpExtender,IProxyListener, IContextMenuFactory,ActionListe
 			if x.lower().startswith("user-agent:"):
 				browser_agent=x
 				break
+		for c in self.colors:
+			if "autochrome/"+c in browser_agent.lower():
+				new_color=c
+				break
 
 		if browser_agent not in self._browser:
-			self._browser[browser_agent]={"id":len(self._browser)+1, "agent":browser_agent, "color":self.colors.pop()}
+			self._browser[browser_agent]={"id":len(self._browser)+1, "agent":browser_agent, "color":new_color}
 
 
 		self.stdout.println(self._browser[browser_agent]["agent"])
